@@ -1,0 +1,19 @@
+name: Generate Terraform Module Documentation
+description: Generates Terraform module documentation using the [terraform-docs](https://github.com/terraform-docs/gh-actions) GitHub Action
+inputs:
+  output_file_path:
+    description: The path at which to place the generated documentation.
+    required: true
+  output_method: 
+    description: The method used to generate the documentation.
+    required: false
+    default: inject
+  enable_git_push:
+    description: If set to 'true', a Git push will be executed after the documentation is created.
+    required: false
+    default: "false"
+runs:
+  using: composite
+  steps:
+    - name: Generate Module Documentation
+      uses: terraform-docs/gh-actions@v0.10.0

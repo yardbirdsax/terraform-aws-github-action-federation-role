@@ -1,0 +1,32 @@
+name: Trunk workflow
+on:
+   push:
+     branches:
+       - "trunk"
+     paths-ignore:
+       - ".github/**"
+       - "README.md"
+       - "LICENSE"
+jobs:
+  release:
+    name: Generate release
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out
+        uses: actions/checkout@v2
+      - name: Generate semantic version
+        id: generate-version
+        uses: paulhatch/semantic-version@v4.0.2
+        with:
+          tag_prefix: ""
+          format: "${major}.${minor}.${patch}"
+      - name: Create tag
+        run: git tag ${{ steps.generate-version.outputs.version }} && git push --tags
+      - name: Generate release
+        uses: Roang-zero1/github-create-release-action@master
+        with:
+          created_tag: "${{ steps.generate-version.outputs.version_tag }}"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+        
