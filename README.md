@@ -56,6 +56,7 @@ No modules.
 | <a name="input_github_org_name"></a> [github\_org\_name](#input\_github\_org\_name) | The name of the GitHub user or organization that owns the repository(ies) the role will use. | `string` | n/a | yes |
 | <a name="input_github_repository_name"></a> [github\_repository\_name](#input\_github\_repository\_name) | The name of the GitHub repository that will be allowed to assume the role. This defaults to '*', which will allow any repository within the org to assume the role. **This is likely not a good use case for most deployments and may be changed in a future release.** | `string` | `"*"` | no |
 | <a name="input_iam_policy_arns"></a> [iam\_policy\_arns](#input\_iam\_policy\_arns) | A list of IAM Policy ARNs that should be attached to the created IAM Role. Can be not specified if policy attachments will be handled elsewhere. | `list(string)` | `[]` | no |
+| <a name="input_iam_role_boundary_policy_arn"></a> [iam\_role\_boundary\_policy\_arn](#input\_iam\_role\_boundary\_policy\_arn) | If specified, the policy with the given ARN will be attached to the IAM Role as a boundary policy. If left as null (the default), no boundary policy will be attached. | `string` | `null` | no |
 | <a name="input_iam_role_name"></a> [iam\_role\_name](#input\_iam\_role\_name) | The name of the IAM Role to be created. | `string` | n/a | yes |
 | <a name="input_oidc_provider_arn"></a> [oidc\_provider\_arn](#input\_oidc\_provider\_arn) | The ARN for the existing OIDC IAM provider for GitHub. | `string` | n/a | yes |
 
