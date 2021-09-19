@@ -30,3 +30,9 @@ variable "iam_policy_arns" {
   type        = list(string)
   default     = []
 }
+
+variable "iam_role_boundary_policy_arn" {
+  description = "If specified, the policy with the given ARN will be attached to the IAM Role as a boundary policy. If left as null (the default), no boundary policy will be attached."
+  type        = string
+  default     = null
+}

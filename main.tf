@@ -34,6 +34,7 @@ data "aws_iam_policy_document" "assume_role_policy" {
 resource "aws_iam_role" "iam_role" {
   name = var.iam_role_name
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
+  permissions_boundary = var.iam_role_boundary_policy_arn
 }
 
 resource "aws_iam_role_policy_attachment" "policy_attachment" {

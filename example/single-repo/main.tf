@@ -24,6 +24,19 @@ resource "aws_iam_policy" "policy" {
   policy = data.aws_iam_policy_document.policy.json
 }
 
+data "aws_iam_policy_document" "boundary_policy" {
+  statement {
+    actions = [ "iam:*" ]
+    effect = "Deny"
+    resources = [ "*" ]
+  }
+}
+
+resource "aws_iam_policy" "boundary_policy" {
+  name = "${var.github_org_name}-${var.github_repository_name == "*" ? "all" : var.github_repository_name}-GitHub-Actions-boundary"
+  policy = data.aws_iam_policy_document.boundary_policy.json
+}
+
 module "iam_role" {
   source = "../../"
 
@@ -33,4 +46,5 @@ module "iam_role" {
   github_branch_names = var.github_branch_names
   oidc_provider_arn = var.oidc_provider_arn
   iam_policy_arns = [ aws_iam_policy.policy.arn, "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess" ]
+  iam_role_boundary_policy_arn = aws_iam_policy.boundary_policy.arn
 }

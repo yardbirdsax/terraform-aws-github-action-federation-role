@@ -9,3 +9,7 @@ output "assume_role_policy_json" {
 output "iam_policy_arn" {
   value = aws_iam_policy.policy.arn
 }
+
+output "boundary_iam_policy_arn" {
+  value = aws_iam_policy.boundary_policy.arn
+}

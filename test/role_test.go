@@ -65,8 +65,12 @@ func TestRole_SingleRepo(t *testing.T) {
 	test_structure.RunTestStage(t, "iam_role_test", func() {
 		iamClient := iam.NewFromConfig(awsConfig)
 
+		// Assert the created role ARN is an output.
 		assert.NotEmpty(t, terraform.Output(t, terraformOptions, "iam_role_arn"))
+		
 		// TODO: Test IAM Role Assume Role Policy
+		
+		// Assert the specified policies are attached to the Role.
 		iamPolicyOutput, err := iamClient.ListAttachedRolePolicies(ctx, &iam.ListAttachedRolePoliciesInput{
 			RoleName: &iamRoleName,
 		})
@@ -82,6 +86,16 @@ func TestRole_SingleRepo(t *testing.T) {
 			awsIAMPolicyARN,
 			createdIAMPolicyARN,
 		}
-		assert.ElementsMatch(t, expectedPolicyARNs, actualIAMPolicyARNs)		
+		assert.ElementsMatch(t, expectedPolicyARNs, actualIAMPolicyARNs)
+		
+		// Assert the specified boundary policy is attached to the Role
+		expectedBoundaryIAMPolicyARN := terraform.Output(t, terraformOptions, "boundary_iam_policy_arn")
+		iamRole, err := iamClient.GetRole(ctx, &iam.GetRoleInput{
+			RoleName: &iamRoleName,
+		})
+		require.Nil(t, err)
+		assert.NotNil(t, iamRole.Role.PermissionsBoundary)
+		actualBoundaryIAMPolicyARN := *iamRole.Role.PermissionsBoundary.PermissionsBoundaryArn
+		assert.Equal(t, expectedBoundaryIAMPolicyARN, actualBoundaryIAMPolicyARN)
 	})
 }
