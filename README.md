@@ -63,7 +63,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_assume_role_policy_json"></a> [assume\_role\_policy\_json](#output\_assume\_role\_policy\_json) | n/a |
-| <a name="output_iam_role"></a> [iam\_role](#output\_iam\_role) | n/a |
+| <a name="output_assume_role_policy_json"></a> [assume\_role\_policy\_json](#output\_assume\_role\_policy\_json) | The JSON result of the assume role policy document. This is mostly used for testing purposes. |
+| <a name="output_iam_role_arn"></a> [iam\_role\_arn](#output\_iam\_role\_arn) | The ARN of the generated IAM Role. |
 
 <!--- END_TF_DOCS --->
