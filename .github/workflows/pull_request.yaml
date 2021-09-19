@@ -1,0 +1,29 @@
+name: Pull Request Check
+on:
+  pull_request:
+    branches:
+      - "trunk"
+    paths-ignore:
+      - ".github/**"
+      - "README.md"
+      - "LICENSE"
+  workflow_dispatch:
+
+jobs:
+  pull_request:
+    name: Pull Request Check
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Generate Module Documentation
+        uses: terraform-docs/gh-actions@v0.10.0
+        with:
+          working-dir: "."
+          output-file: "README.md"
+          output-method: "inject"
+          git-push: true
+
+        
