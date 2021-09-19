@@ -9,21 +9,35 @@ terraform {
 
 locals {
   repository_slug = "${var.github_org_name}/${var.github_repository_name}"
-  repository_slug_list = [ 
+  repository_ref_list = [ 
     for b in var.github_branch_names:
       "repo:${local.repository_slug}:${b == "*" ? "*" : "ref:refs/heads/${b}"}"
   ]
-}
-
-resource "aws_iam_openid_connect_provider" "github" {
-  url = "https://vstoken.actions.githubusercontent.com"
-  thumbprint_list = [ "a031c46782e6e6c662c2c87c76da9aa62ccabd8e" ]
-  client_id_list = ["https://github.com/${local.repository_slug}"]
 }
 
 data "aws_iam_policy_document" "assume_role_policy" {
   statement {
     effect = "Allow"
     actions = [ "sts:AssumeRoleWithWebIdentity" ]
+    principals {
+      type = "Federated"
+      identifiers = [ var.oidc_provider_arn  ]
+    }
+    condition {
+      test = "StringLike"
+      variable = "vstoken.actions.githubusercontent.com:sub"
+      values = local.repository_ref_list
+    }
   }
+}
+
+resource "aws_iam_role" "iam_role" {
+  name = var.iam_role_name
+  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
+}
+
+resource "aws_iam_role_policy_attachment" "policy_attachment" {
+  count = length(var.iam_policy_arns)
+  role = aws_iam_role.iam_role.name
+  policy_arn = var.iam_policy_arns[count.index]
 }

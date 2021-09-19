@@ -1,22 +1,28 @@
 package test
 
 import (
-	"fmt"
+	//"fmt"
+	"context"
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/iam"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/gruntwork-io/terratest/modules/aws"
 	"github.com/gruntwork-io/terratest/modules/random"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
-
-	"github.com/stretchr/testify/assert"
+	//"github.com/stretchr/testify/assert"
 )
 
 const (
 	GITHUB_ORG_NAME = "yardbirdsax"
 	GITHUB_REPO_NAME = "terraform-aws-github-action-federation-role"
+	AWS_OIDC_PROVIDER_ARN = "arn:aws:iam::068845349622:oidc-provider/vstoken.actions.githubusercontent.com"
 )
 
 func TestRole_SingleRepo(t *testing.T) {
@@ -24,10 +30,8 @@ func TestRole_SingleRepo(t *testing.T) {
 	
 	terraformDir := "example/single-repo"
 	terraformRootDir := "../"
-	expectedClientIDList := fmt.Sprintf("[https://github.com/%s/%s]", GITHUB_ORG_NAME, GITHUB_REPO_NAME)
 	iamRoleName := strings.ToLower(random.UniqueId())
-	region := aws.GetRandomStableRegion(t, nil, nil)
-	
+	region := aws.GetRandomStableRegion(t, nil, nil)	
 	
 	tempDir := test_structure.CopyTerraformFolderToTemp(t, terraformRootDir, terraformDir)
 	
@@ -39,6 +43,7 @@ func TestRole_SingleRepo(t *testing.T) {
 			"github_branch_names": []string{ "*" },
 			"iam_role_name": iamRoleName,
 			"region": region,
+			"oidc_provider_arn": AWS_OIDC_PROVIDER_ARN,
 		},
 	}
 
@@ -53,7 +58,29 @@ func TestRole_SingleRepo(t *testing.T) {
 		_ = terraform.InitAndApplyAndIdempotent(t, terraformOptions)
 	})
 
-	//iamRole := terraform.OutputMap(t, terraformOptions, "iam_role")
-	githubProvider := terraform.OutputMap(t, terraformOptions, "oidc_provider")
-	assert.Equal(t, expectedClientIDList, githubProvider["client_id_list"])		
+	ctx := context.Background()
+	awsConfig, err := config.LoadDefaultConfig(ctx)
+	require.Nil(t, err, "Error trying to load default AWS configuration.")
+
+	test_structure.RunTestStage(t, "iam_role_test", func() {
+		iamClient := iam.NewFromConfig(awsConfig)
+		// TODO: Test IAM Role Assume Role Policy
+
+		iamPolicyOutput, err := iamClient.ListAttachedRolePolicies(ctx, &iam.ListAttachedRolePoliciesInput{
+			RoleName: &iamRoleName,
+		})
+		require.Nil(t, err)
+		iamPolicies := iamPolicyOutput.AttachedPolicies
+		var actualIAMPolicyARNs []string
+		for _, v := range(iamPolicies) {
+			actualIAMPolicyARNs = append(actualIAMPolicyARNs, *v.PolicyArn)
+		}
+		createdIAMPolicyARN := terraform.Output(t, terraformOptions, "iam_policy_arn")
+		awsIAMPolicyARN := "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+		expectedPolicyARNs := []string{
+			awsIAMPolicyARN,
+			createdIAMPolicyARN,
+		}
+		assert.ElementsMatch(t, expectedPolicyARNs, actualIAMPolicyARNs)		
+	})
 }

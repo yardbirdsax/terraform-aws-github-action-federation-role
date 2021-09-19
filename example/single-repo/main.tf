@@ -11,6 +11,19 @@ provider "aws" {
   region = var.region
 }
 
+
+data "aws_iam_policy_document" "policy" {
+  statement {
+    actions = [ "ec2:*" ]
+    effect = "Allow"
+    resources = [ "*" ]
+  }
+}
+resource "aws_iam_policy" "policy" {
+  name = "${var.github_org_name}-${var.github_repository_name == "*" ? "all" : var.github_repository_name}-GitHub-Actions"
+  policy = data.aws_iam_policy_document.policy.json
+}
+
 module "iam_role" {
   source = "../../"
 
@@ -18,4 +31,6 @@ module "iam_role" {
   github_org_name = var.github_org_name
   github_repository_name = var.github_repository_name
   github_branch_names = var.github_branch_names
+  oidc_provider_arn = var.oidc_provider_arn
+  iam_policy_arns = [ aws_iam_policy.policy.arn, "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess" ]
 }

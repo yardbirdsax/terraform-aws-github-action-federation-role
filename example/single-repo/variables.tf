@@ -24,3 +24,8 @@ variable "region" {
   description = "The name of the AWS region to deploy the resources in."
   type        = string
 }
+
+variable "oidc_provider_arn" {
+  description = "The ARN for the existing OIDC IAM provider for GitHub."
+  type        = string
+}

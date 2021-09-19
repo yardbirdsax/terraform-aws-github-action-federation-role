@@ -19,3 +19,14 @@ variable "github_branch_names" {
   default     = ["*"]
   type        = list(string)
 }
+
+variable "oidc_provider_arn" {
+  description = "The ARN for the existing OIDC IAM provider for GitHub."
+  type        = string
+}
+
+variable "iam_policy_arns" {
+  description = "A list of IAM Policy ARNs that should be attached to the created IAM Role. Can be not specified if policy attachments will be handled elsewhere."
+  type        = list(string)
+  default     = []
+}

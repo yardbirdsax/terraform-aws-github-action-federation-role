@@ -2,8 +2,6 @@ output "iam_role" {
   value = {}
 }
 
-output "oidc_provider" {
-  value = {
-    client_id_list = aws_iam_openid_connect_provider.github.client_id_list
-  }
+output "assume_role_policy_json" {
+  value = data.aws_iam_policy_document.assume_role_policy.json
 }
