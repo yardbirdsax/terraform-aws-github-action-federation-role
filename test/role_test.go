@@ -64,8 +64,9 @@ func TestRole_SingleRepo(t *testing.T) {
 
 	test_structure.RunTestStage(t, "iam_role_test", func() {
 		iamClient := iam.NewFromConfig(awsConfig)
-		// TODO: Test IAM Role Assume Role Policy
 
+		assert.NotEmpty(t, terraform.Output(t, terraformOptions, "iam_role_arn"))
+		// TODO: Test IAM Role Assume Role Policy
 		iamPolicyOutput, err := iamClient.ListAttachedRolePolicies(ctx, &iam.ListAttachedRolePoliciesInput{
 			RoleName: &iamRoleName,
 		})

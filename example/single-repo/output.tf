@@ -1,5 +1,5 @@
-output "iam_role" {
-  value = module.iam_role.iam_role
+output "iam_role_arn" {
+  value = module.iam_role.iam_role_arn
 }
 
 output "assume_role_policy_json" {
