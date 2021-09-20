@@ -24,7 +24,7 @@ jobs:
       - name: Acquire AWS credentials
         uses: "yardbirdsax/action-aws-assume-federated-role@feature/initial"
         with:
-          aws_iam_role_arn: "arn:aws:iam::068845349622:role/GHA-yardbirdsax-terraform-aws-github-actions-federation-role"
+          aws_iam_role_arn: "arn:aws:iam::068845349622:role/GHA-yardbirdsax-terraform-aws-github-action-federation-role"
           aws_default_region: us-east-1
       - name: Test AWS access
         shell: bash
