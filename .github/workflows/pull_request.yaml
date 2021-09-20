@@ -22,7 +22,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
       - name: Acquire AWS credentials
-        uses: "yardbirdsax/action-aws-assume-federated-role@feature/initial"
+        uses: "yardbirdsax/action-aws-assume-federated-role@0.0.1"
         with:
           aws_iam_role_arn: "arn:aws:iam::068845349622:role/GHA-yardbirdsax-terraform-aws-github-action-federation-role"
           aws_default_region: us-east-1
