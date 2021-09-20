@@ -26,9 +26,18 @@ jobs:
         with:
           aws_iam_role_arn: "arn:aws:iam::068845349622:role/GHA-yardbirdsax-terraform-aws-github-action-federation-role"
           aws_default_region: us-east-1
-      - name: Test AWS access
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.15.5
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+      - name: Run go tests
         shell: bash
-        run: aws sts get-caller-identity        
+        working-directory: "test/"
+        run: |
+          go test -v -timeout 30m -count 1 ./...       
       - name: Generate Module Documentation
         uses: terraform-docs/gh-actions@v0.10.0
         with:
