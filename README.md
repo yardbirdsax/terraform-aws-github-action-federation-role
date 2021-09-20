@@ -1,6 +1,6 @@
 # terraform-aws-github-action-federation-role
 
-This repository contains a Terraform module for creating IAM Roles that can be assumed by GitHub Actions using web federation. Much of the work here is based of the [excellent blog post](https://awsteele.com/blog/2021/09/15/aws-federation-comes-to-github-actions.html) by Aidan Steele.
+This repository contains a Terraform module for creating IAM Roles that can be assumed by GitHub Actions using web federation. Much of the work here is based off the [excellent blog post](https://awsteele.com/blog/2021/09/15/aws-federation-comes-to-github-actions.html) by Aidan Steele.
 
 > **PLEASE NOTE**: This is as-of-yet (19th of September 2021) undocumented functionality, so this module should probably not be used in production environments as GitHub may change things before public release. See [this GitHub Roadmap item](https://github.com/github/roadmap/issues/249) for a current status of the feature.
 
