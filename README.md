@@ -7,9 +7,9 @@ This repository contains a Terraform module for creating IAM Roles that can be a
 The module requires that you set up an OIDC provider for GitHub in your AWS Account prior to use, the ARN of which is required by the `oidc_provider_arn` input variable. See below for an example Terraform resource that would provision this.
 
 ```hcl
-variable "github_owner_list" {
+variable "github_repo_list" {
   type = list(string)
-  description = "A list of GitHub orgs / users that the OIDC provider will trust."
+  description = "A list of GitHub orgs / users and repositories that the OIDC provider will trust. This must be in the format of 'org/repo'."
 }
 
 resource "aws_iam_openid_connect_provider" "github" {

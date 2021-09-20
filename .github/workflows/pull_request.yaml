@@ -13,11 +13,32 @@ jobs:
   pull_request:
     name: Pull Request Check
     runs-on: ubuntu-20.04
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: Check out
         uses: actions/checkout@v2
         with:
           ref: ${{ github.event.pull_request.head.ref }}
+      - name: Acquire AWS credentials
+        uses: "yardbirdsax/action-aws-assume-federated-role@0.0.1"
+        with:
+          aws_iam_role_arn: "arn:aws:iam::068845349622:role/GHA-yardbirdsax-terraform-aws-github-action-federation-role"
+          aws_default_region: us-east-1
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.15.5
+          terraform_wrapper: false
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+      - name: Run go tests
+        shell: bash
+        working-directory: "test/"
+        run: |
+          go test -v -timeout 30m -count 1 ./...       
       - name: Generate Module Documentation
         uses: terraform-docs/gh-actions@v0.10.0
         with:
