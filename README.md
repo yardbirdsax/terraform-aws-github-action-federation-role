@@ -21,7 +21,7 @@ variable "github_repo_list" {
 resource "aws_iam_openid_connect_provider" "github" {
   url = "https://vstoken.actions.githubusercontent.com"
   thumbprint_list = [ "a031c46782e6e6c662c2c87c76da9aa62ccabd8e" ]
-  client_id_list = formatlist("https://github.com/%s", var.github_owner_list)
+  client_id_list = formatlist("https://github.com/%s", var.github_repo_list)
 }
 ```
 
