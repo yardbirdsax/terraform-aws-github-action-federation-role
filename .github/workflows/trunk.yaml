@@ -7,9 +7,6 @@ on:
        - ".github/**"
        - "README.md"
        - "LICENSE"
-permissions:
-  id-token: write
-  contents: read
 jobs:
   release:
     name: Generate release
