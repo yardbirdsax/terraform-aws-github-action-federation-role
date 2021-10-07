@@ -25,7 +25,7 @@ data "aws_iam_policy_document" "assume_role_policy" {
     }
     condition {
       test = "StringLike"
-      variable = "vstoken.actions.githubusercontent.com:sub"
+      variable = "token.actions.githubusercontent.com:sub"
       values = local.repository_ref_list
     }
   }
