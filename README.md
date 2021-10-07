@@ -4,7 +4,7 @@ This repository contains a Terraform module for creating IAM Roles that can be a
 
 > **PLEASE NOTE**: This is as-of-yet (19th of September 2021) undocumented functionality, so this module should probably not be used in production environments as GitHub may change things before public release. See [this GitHub Roadmap item](https://github.com/github/roadmap/issues/249) for a current status of the feature.
 
-This can be used in concert with [this GitHub Action](https://github.com/yardbirdsax/action-aws-assume-federated-role), which allows a workflow to assume a role. In fact, the tests that run as part of PR validation and release workflows for this very module [use it](https://github.com/yardbirdsax/terraform-aws-github-action-federation-role/blob/782c1181c13d9241959ee749d6e893a889e140d2/.github/workflows/pull_request.yaml#L24)!
+This can be used in concert with [this GitHub Action](https://github.com/zarnovican/aws-oidc-login-action), which allows a workflow to assume a role. In fact, the tests that run as part of PR validation and release workflows for this very module [use it](https://github.com/yardbirdsax/terraform-aws-github-action-federation-role/blob/782c1181c13d9241959ee749d6e893a889e140d2/.github/workflows/pull_request.yaml#L24)!
 
 For a full example of using the module, see my other repository [here](https://github.com/yardbirdsax/infra-github-actions/tree/trunk/terraform/terratest), where you can see a deployment for the OIDC provider and the IAM Role the workflows in this repository assume. (Please excuse the rather broad permissions assigned to the role; this is always run in a sandbox account that gets wiped frequently so the risk was minimal, though I do want to clean it up in the future.)
 

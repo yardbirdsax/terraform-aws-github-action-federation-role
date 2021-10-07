@@ -1,15 +1,14 @@
 name: Trunk workflow
 on:
-   push:
-     branches:
-       - "trunk"
-     paths-ignore:
-       - ".github/**"
-       - "README.md"
-       - "LICENSE"
-permissions:
-  id-token: write
-  contents: read
+  push:
+    branches:
+      - "trunk"
+    paths-ignore:
+      - ".github/**"
+      - "README.md"
+      - "LICENSE"
+  workflow_dispatch:
+    
 jobs:
   release:
     name: Generate release
